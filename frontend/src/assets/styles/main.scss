@@ -1,0 +1,26 @@
+@use './variables' as vars;
+
+// 1. Сброс и базовые стили
+@use './base/reset';
+@use './base/typography';
+
+// 3. Компоненты UI
+@use './components/ui/button';
+@use './components/ui/TableView';
+@use './components/ui/MainView';
+
+// 4. Макеты
+@use './components/layout/header';
+
+// Применяем стили к body
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: vars.$brand-bg;
+  color: vars.$brand-text-on-dark;
+  font-family: vars.$font-family-main;
+  font-size: vars.$font-size-base;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

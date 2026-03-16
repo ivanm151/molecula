@@ -1,0 +1,56 @@
+@use '../../variables' as *;
+
+$dark-grey: #2d2d2d;
+
+.header {
+  background: white;
+  border-bottom: 3px solid $brand-button; // using your brand color
+  padding: 10px 0;
+}
+
+.header-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: $dark-grey;
+  font-weight: 600;
+  font-size: 18px;
+
+  transition: opacity 0.2s ease;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.logo-text {
+  white-space: nowrap;
+}
+
+h1 {
+  margin-right: 100px;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    height: 40px;
+  }
+  .logo-text {
+    display: none;
+  }
+}

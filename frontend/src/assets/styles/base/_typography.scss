@@ -1,0 +1,28 @@
+// ===== ШРИФТЫ =====
+// Google Fonts (рекомендую подключить в index.html)
+// - 'Roboto' для интерфейса
+// - 'Courier Prime' для химических формул и моноширинных данных
+
+// Шрифтовые семейства
+$font-family-main: 'DINPro', 'Segoe UI', Roboto, sans-serif;
+$font-family-mono: 'Courier Prime', 'Courier New', monospace;
+$font-family-heading: 'Poppins', 'Roboto', sans-serif;
+
+// Размеры шрифта
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+
+// Вес шрифта
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Высота строки
+$line-height-base: 1.5;
+$line-height-title: 1.2;

@@ -1,0 +1,191 @@
+@use '../../variables' as *;
+@use '../../base/typography' as type;
+
+.test-view {
+  min-height: 100vh;
+  background: $color-bg;
+  color: $color-text;
+  font-family: type.$font-family-main;
+  padding: $gap-xl;
+
+  h1 {
+    font-size: type.$font-size-2xl;
+    font-weight: type.$font-weight-bold;
+    margin-bottom: $gap-lg;
+    text-align: center;
+    color: $color-text; // main title stays light
+  }
+
+  .layout {
+    display: flex;
+    gap: $gap-lg;
+    flex-wrap: wrap;
+
+    .visualization {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: $gap-md;
+
+      .viewer-2d, .viewer-3d {
+        border: 1px solid $color-border;
+        border-radius: $border-radius-lg;
+        padding: $gap-md;
+        background: white;
+        box-shadow: $shadow-md;
+        color: $color-primary; // dark text on white panels
+
+        h2 {
+          font-size: type.$font-size-lg;
+          font-weight: type.$font-weight-bold;
+          margin-bottom: $gap-sm;
+          color: $color-primary; // headings readable
+        }
+
+        .viewer-box {
+          width: 100%;
+          height: 400px;
+          background: #f4f4f4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $color-primary; // dark text inside viewer
+        }
+
+        .viewer-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: $gap-sm;
+          margin-top: $gap-sm;
+
+          button {
+            padding: 6px 12px;
+            font-size: type.$font-size-sm;
+            border-radius: $border-radius-sm;
+            border: none;
+            background-color: $color-secondary;
+            color: white;
+            cursor: pointer;
+
+
+          }
+        }
+      }
+
+      .viewer-3d {
+        flex-grow: 1;
+        width: 100%;        // span full parent width
+        // fill remaining vertical space
+        min-height: 400px;  // optional minimum height
+
+        .viewer-box {
+          height: 100%; // fill 3D viewer container
+          width: 100%;
+        }
+      }
+    }
+
+    .analysis-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: $gap-md;
+      background: white;
+      border-radius: $border-radius-lg;
+      padding: $gap-md;
+      box-shadow: $shadow-md;
+      color: $color-primary; // dark text
+
+      p {
+        color: $color-primary; // input label text
+      }
+
+      .input-group {
+        display: flex;
+        gap: $gap-sm;
+
+        input {
+          flex: 1;
+          padding: $gap-sm;
+          border-radius: $border-radius-md;
+          border: 1px solid $color-border;
+          background: $brand-input-bg;
+          color: $color-primary;
+        }
+
+        button {
+          padding: $gap-sm $gap-md;
+          border-radius: $border-radius-md;
+          border: none;
+          background-color: $brand-button;
+          color: white;
+          font-weight: type.$font-weight-bold;
+          cursor: pointer;
+
+        }
+      }
+
+      .message {
+        padding: $gap-sm;
+        border-radius: $border-radius-sm;
+
+        &.error {
+          background: rgba($color-danger, 0.1);
+          color: $color-danger;
+        }
+
+        &.success {
+          background: rgba($color-success, 0.1);
+          color: $color-success;
+        }
+      }
+
+      .result-card {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-sm;
+
+        h2 {
+          font-size: type.$font-size-lg;
+          font-weight: type.$font-weight-bold;
+          color: $color-primary;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+
+          li {
+            font-size: type.$font-size-base;
+            margin-bottom: 4px;
+          }
+        }
+
+        button {
+          align-self: flex-start;
+          padding: $gap-sm $gap-md;
+          background: $brand-button;
+          color: white;
+          border: none;
+          border-radius: $border-radius-md;
+          font-weight: type.$font-weight-bold;
+        }
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .visualization, .analysis-block {
+    width: 100%;
+  }
+
+  .viewer-3d .viewer-box {
+    height: 300px;
+  }
+}
