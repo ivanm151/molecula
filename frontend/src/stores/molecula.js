@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { dbService } from "../services/database";
-import { hfService } from "../services/huggingface";
+import { dbService } from "../services/dbService.js";
+import { hfService } from "../services/hfService.js";
 
 export const useMoleculeStore = defineStore("molecule", {
     state: () => ({

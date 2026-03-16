@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-import logoImg from '../../assets/styles/sfu/SFU_Logo.png';
 
 const isMenuOpen = ref(false);
 
@@ -15,7 +14,6 @@ const closeMenu = () => {
     <div class="header-container">
       <!-- Логотип -->
       <a href="/" class="logo-link" @click="closeMenu">
-        <img :src="logoImg" alt="SFU Logo" class="logo" />
         <span class="logo-text">MoleMap</span>
       </a>
 

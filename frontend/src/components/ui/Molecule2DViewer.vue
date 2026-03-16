@@ -145,7 +145,7 @@ function render2D(atomColors = {}) {
 }
 
 // -------------------------
-// Heatmap functions
+// Heatmap backend
 // -------------------------
 // Convert atom SHAP value to color
 function shapToColor(value) {
@@ -170,7 +170,7 @@ function clearAtomHeatmap() {
 }
 
 // -------------------------
-// Expose functions to parent
+// Expose backend to parent
 // -------------------------
 defineExpose({
   setAtomHeatmap,

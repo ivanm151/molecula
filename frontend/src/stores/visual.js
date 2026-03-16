@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { shapService } from '../services/rdkit';
+import { shapService } from '../services/shapService.js';
 
 export const useShapStore = defineStore('shap', {
     state: () => ({
