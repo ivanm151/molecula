@@ -2,6 +2,7 @@ import { api } from '../api/api';
 
 export const dbService = {
     async getMolecules() {
+        console.log('getMolecules');
         return api.get('/api/db');
     },
 

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
@@ -17,14 +17,10 @@ app.use(express.json());
 // ---------- Валидация SMILES ----------
 async function validateSmiles(smiles) {
     try {
-        const res = await fetch(`${HF_SPACE_URL}/api/descriptor`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-        return res.ok;
+        await axios.post(`${HF_SPACE_URL}/api/descriptor`, { smiles });
+        return true;
     } catch (err) {
-        console.error('[Validation] Ошибка при валидации SMILES:', err.message);
+        console.error('[Validation] Ошибка при валидации SMILES:', err.response?.data || err.message);
         return false;
     }
 }
@@ -43,17 +39,7 @@ app.post('/api/hf', async (req, res) => {
             return res.status(400).json({ ok: false, error: 'Невалидный SMILES' });
         }
 
-        const predictRes = await fetch(`${HF_SPACE_URL}/api/predict`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-
-        if (!predictRes.ok) {
-            return res.status(500).json({ ok: false, error: 'Ошибка при анализе молекулы' });
-        }
-
-        const prediction = await predictRes.json();
+        const { data: prediction } = await axios.post(`${HF_SPACE_URL}/api/predict`, { smiles });
 
         const moleculeData = {
             smiles,
@@ -66,8 +52,8 @@ app.post('/api/hf', async (req, res) => {
 
         res.json({ ok: true, data: moleculeData });
     } catch (err) {
-        console.error('Ошибка в /api/hf:', err);
-        res.status(500).json({ ok: false, error: 'Network error' });
+        console.error('Ошибка в /api/hf:', err.response?.data || err.message);
+        res.status(500).json({ ok: false, error: 'Ошибка при анализе молекулы' });
     }
 });
 
@@ -103,23 +89,15 @@ app.post('/api/addMolecule', async (req, res) => {
             return res.status(400).json({ ok: false, error: 'Невалидный SMILES' });
         }
 
-        const predictRes = await fetch(`${HF_SPACE_URL}/api/predict`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-        if (!predictRes.ok) {
-            return res.status(500).json({ ok: false, error: 'Ошибка при анализе молекулы' });
-        }
-        const prediction = await predictRes.json();
+        const { data: prediction } = await axios.post(`${HF_SPACE_URL}/api/predict`, { smiles });
 
-        const nameRes = await fetch(`${HF_SPACE_URL}/api/get_name`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-        const nameData = await nameRes.json().catch(() => null);
-        const name = nameData?.name || null;
+        let name = null;
+        try {
+            const { data: nameData } = await axios.post(`${HF_SPACE_URL}/api/get_name`, { smiles });
+            name = nameData.name || null;
+        } catch (err) {
+            console.warn('Не удалось получить имя:', err.response?.data || err.message);
+        }
 
         const moleculeData = {
             smiles,
@@ -139,14 +117,14 @@ app.post('/api/addMolecule', async (req, res) => {
 
         if (error) {
             if (error.code === '23505') {
-                return res.json({ ok: true, exists: true }); // Уже существует
+                return res.json({ ok: true, exists: true });
             }
             throw error;
         }
 
         res.json({ ok: true, exists: false, data });
     } catch (err) {
-        console.error('Ошибка при добавлении молекулы:', err);
+        console.error('Ошибка при добавлении молекулы:', err.response?.data || err.message);
         res.status(500).json({ ok: false, error: err.message });
     }
 });
@@ -160,21 +138,11 @@ app.post('/api/getName', async (req, res) => {
     }
 
     try {
-        const res = await fetch(`${HF_SPACE_URL}/api/get_name`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-
-        if (!res.ok) {
-            return res.status(400).json({ ok: false, error: 'Не удалось получить название' });
-        }
-
-        const data = await res.json();
+        const { data } = await axios.post(`${HF_SPACE_URL}/api/get_name`, { smiles });
         res.json({ ok: true, name: data.name });
     } catch (err) {
-        console.error('Ошибка при получении имени:', err);
-        res.status(500).json({ ok: false, error: 'Network error' });
+        console.error('Ошибка при получении имени:', err.response?.data || err.message);
+        res.status(500).json({ ok: false, error: 'Не удалось получить название' });
     }
 });
 
@@ -187,23 +155,11 @@ app.post('/api/predictShap', async (req, res) => {
     }
 
     try {
-        const response = await fetch(`${HF_SPACE_URL}/api/predict_shap`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ smiles }),
-        });
-
-        if (!response.ok) {
-            const text = await response.text();
-            console.error('SHAP API error:', text);
-            return res.status(500).json({ ok: false, error: 'Ошибка в SHAP-модели' });
-        }
-
-        const data = await response.json();
+        const { data } = await axios.post(`${HF_SPACE_URL}/api/predict_shap`, { smiles });
         res.json({ ok: true, data });
     } catch (err) {
-        console.error('Ошибка при обращении к /api/predict_shap:', err);
-        res.status(500).json({ ok: false, error: 'Network error' });
+        console.error('Ошибка при обращении к /api/predict_shap:', err.response?.data || err.message);
+        res.status(500).json({ ok: false, error: 'Ошибка в SHAP-модели' });
     }
 });
 
